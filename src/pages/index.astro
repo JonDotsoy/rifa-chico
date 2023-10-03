@@ -1,0 +1,81 @@
+---
+import DocumentLayout from "../components/layouts/document-layout.astro";
+import { Input } from "../components/form/input";
+import { GridSelect } from "../components/form/grid_select";
+import PhotoChico from "../../public/photo_chico.jpeg";
+import { Image } from "astro:assets";
+---
+
+<script>
+    import { logEvent } from "firebase/analytics";
+    import { analytics } from "../lib/firebase";
+
+    logEvent(analytics, "page_view");
+</script>
+
+<DocumentLayout title="Rifa a beneficio Chico">
+    <div class="container m-auto p-4">
+        <form method="post" action="/pay" autocomplete="on">
+            <h1 class="text-center text-3xl font-bold">
+                ¡Bienvenido a la Rifa Solidaria en Apoyo a Chico! 🐾
+            </h1>
+            <div class="flex justify-center py-4">
+                <Image
+                    class="rounded shadow-md"
+                    src={PhotoChico}
+                    alt="Photo Chico"
+                    width={235}
+                    height={235}
+                />
+            </div>
+            <p class="pb-2">
+                Estás a punto de marcar la diferencia en la vida de nuestro
+                querido amigo peludo, Chico. Cada número que elijas no solo te
+                da la oportunidad de ganar un emocionante premio, sino que
+                también contribuye directamente a brindarle amor y atención a
+                Chico. Tu generosidad y apoyo son invaluables para su bienestar.
+            </p>
+            <p class="pb-2">
+                Selecciona tu número de la suerte entre los disponibles y, con
+                un poco de suerte, podrías ser el afortunado ganador. ¡Gracias
+                por ser parte de esta noble causa!
+            </p>
+            <div
+                class="[&>div>input]:border
+                       [&>div>input]:rounded
+                       [&>div>input]:w-full
+                       [&>div>input]:px-4
+                       [&>div>input]:py-4
+                       space-y-4"
+            >
+                <div>
+                    <GridSelect total={100} />
+                </div>
+                <div>
+                    <label for="phone_number">Numero de teléfono</label>
+                    <Input
+                        id="phone_number"
+                        name="phone_number"
+                        type="tel"
+                        placeholder="123456789"
+                        autoComplete="tel-country-code"
+                        required
+                    />
+                    <p class="text-gray-500">
+                        Por favor, proporciona tu número de teléfono a
+                        continuación. No te preocupes, solo lo usaremos para
+                        ponernos en contacto contigo si eres el afortunado
+                        ganador.
+                    </p>
+                </div>
+                <div class="just">
+                    <button
+                        type="submit"
+                        class="border px-4 py-2 rounded bg-blue-400 text-white shadow"
+                        >Ir a Pagar</button
+                    >
+                </div>
+            </div>
+        </form>
+    </div>
+</DocumentLayout>

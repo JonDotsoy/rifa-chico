@@ -1,0 +1,52 @@
+---
+import DocumentLayout from "../components/layouts/document-layout.astro";
+import { preference } from "../lib/mercadopago";
+import { inspect } from "node:util";
+import ms from "ms";
+import { z } from "zod";
+
+if (Astro.request.method !== "POST") return new Response(null, { status: 404 });
+
+const formData = await Astro.request.formData();
+
+const payload = z
+    .object({
+        raffleNumber: z.string().transform(Number),
+        phoneNumber: z.string().transform(Number),
+    })
+    .parse({
+        raffle_number: formData.get("raffle_number")?.toString(),
+        phoneNumber: formData.get("phone_number")?.toString(),
+    });
+
+return new Response(inspect(payload));
+
+const docPreference = await preference.create({
+    body: {
+        items: [
+            {
+                id: `raffle_number_${payload.raffleNumber}`,
+                quantity: 1,
+                title: "Pago Cupo rifa 32",
+                unit_price: Number(import.meta.env.CUPO_RIFA),
+                category_id: "social",
+                currency_id: "CLP",
+                picture_url: new URL("/photo_chico.jpeg", Astro.url).toString(),
+            },
+        ],
+        expires: true,
+        date_of_expiration: new Date(Date.now() + ms("10 minutes")).toJSON(),
+        payer: {
+            phone: {
+                area_code: "56",
+                number: "947331064",
+            },
+        },
+    },
+});
+
+const isDev = import.meta.env.DEV;
+if (isDev) return new Response(inspect(docPreference));
+
+return Astro.redirect(docPreference.init_point, 308);
+---
