@@ -5,35 +5,44 @@ import { inspect } from "node:util";
 import ms from "ms";
 import { z } from "zod";
 
+export const prerender = false;
+
 if (Astro.request.method !== "POST") return new Response(null, { status: 404 });
 
 const formData = await Astro.request.formData();
 
 const payload = z
     .object({
-        raffleNumber: z.string().transform(Number),
-        phoneNumber: z.string().transform(Number),
+        raffleNumbers: z.string().transform(Number),
+        raffleNumber: z.array(z.string().transform(Number)),
+        phoneNumber: z
+            .string()
+            .transform((e) => Number(e.replace(/[^\d]/g, ""))),
     })
     .parse({
-        raffle_number: formData.get("raffle_number")?.toString(),
+        raffleNumbers: formData.get("raffle_numbers")?.toString(),
+        raffleNumber: formData
+            .getAll("raffle_number")
+            ?.map((field) => field.toString()),
         phoneNumber: formData.get("phone_number")?.toString(),
     });
 
-return new Response(inspect(payload));
+// return new Response(inspect(payload, { depth: Infinity, breakLength: 0 }), {
+//     headers: { "Content-Type": "text/plain" },
+// });
 
 const docPreference = await preference.create({
     body: {
-        items: [
-            {
-                id: `raffle_number_${payload.raffleNumber}`,
-                quantity: 1,
-                title: "Pago Cupo rifa 32",
-                unit_price: Number(import.meta.env.CUPO_RIFA),
-                category_id: "social",
-                currency_id: "CLP",
-                picture_url: new URL("/photo_chico.jpeg", Astro.url).toString(),
-            },
-        ],
+        additional_info: JSON.stringify(payload),
+        items: payload.raffleNumber.map((raffleNumber) => ({
+            id: `raffle_number_${raffleNumber}`,
+            quantity: 1,
+            title: `Pago cupo rifa ${raffleNumber}`,
+            unit_price: Number(import.meta.env.CUPO_RIFA),
+            category_id: "social",
+            currency_id: "CLP",
+            picture_url: new URL("/photo_chico.jpeg", Astro.url).toString(),
+        })),
         expires: true,
         date_of_expiration: new Date(Date.now() + ms("10 minutes")).toJSON(),
         payer: {
@@ -41,6 +50,9 @@ const docPreference = await preference.create({
                 area_code: "56",
                 number: "947331064",
             },
+        },
+        back_urls: {
+            success: new URL("/success", Astro.url).toString(),
         },
     },
 });

@@ -1,0 +1,106 @@
+---
+import { inspect } from "util";
+import { payment } from "../../lib/mercadopago";
+import { z } from "zod";
+import { firestore } from "../../lib/firebase-server";
+
+export const prerender = false;
+
+const payloadHookMercadoPago = z.object({
+    action: z.string(),
+    api_version: z.string(),
+    data: z.object({ id: z.string() }),
+    date_created: z.string(),
+    id: z.number(),
+    live_mode: z.boolean(),
+    type: z.string(),
+    user_id: z.string(),
+});
+
+if (Astro.request.method === "POST") {
+    const payload = payloadHookMercadoPago.parse(await Astro.request.json());
+    if (payload.action === "payment.created") {
+        const paymentDetail = await payment.get({ id: payload.data.id });
+        if (paymentDetail.status === "approved") {
+            await firestore
+                .collection(`payments`)
+                .doc(`${paymentDetail.id}`)
+                .set(paymentDetail);
+            const phone = paymentDetail.additional_info.payer.phone;
+            for (const item of paymentDetail.additional_info.items) {
+                await firestore
+                    .collection("raffles")
+                    .doc(`${item.id}`)
+                    .set({ item, phone });
+            }
+        }
+        return new Response(
+            inspect(
+                {
+                    payload,
+                    paymentDetail,
+                },
+                { depth: Infinity, breakLength: 0 },
+            ),
+        );
+    }
+    return new Response(
+        inspect(
+            {
+                payload,
+                // payment: await payment.get({
+                //     id: Astro.url.searchParams.get("data_id"),
+                // }),
+            },
+            { depth: Infinity, breakLength: 0 },
+        ),
+    );
+}
+
+const isProd = import.meta.env.PROD;
+
+if (isProd) return new Response(null, { status: 404 });
+---
+
+<script>
+    const u = new URL(location.href);
+    u.searchParams.set("data_id", "1315084272");
+    u.searchParams.set("type", "payment");
+    const res = await fetch(u, {
+        method: "POST",
+        headers: {
+            "x-trace-digest-08":
+                "SjRKhp4Hyp/zKhWZbe0DOt1qw9YND2/7Bz4tv/KH8p3jUfhMOhBbuDxUz7yxsTq8CDMEIHKuovSW3IeGaKQ1mg==",
+            "x-socket-timeout": "25000",
+            "x-signature":
+                "ts=1696339262,v1=89481c056e9b0c77aeb2ed2e30465aad450d825fd1324c41fece752706e3a4bf",
+            "x-rest-pool-name": "pool_unknown",
+            "x-request-id": "64d7d556-2dc0-49e7-a0c1-fc5e0d534b85",
+            "content-type": "application/json",
+            accept: "application/json",
+        },
+        body: JSON.stringify({
+            action: "payment.created",
+            api_version: "v1",
+            data: { id: "1315084272" },
+            date_created: "2023-10-03T15:39:26Z",
+            id: 107879494608,
+            live_mode: false,
+            type: "payment",
+            user_id: "1315084272",
+        }),
+    });
+    const resElement = document.querySelector("#res");
+    if (resElement) resElement.textContent = await res.text();
+</script>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <pre><code id="res" /></pre>
+    </body>
+</html>

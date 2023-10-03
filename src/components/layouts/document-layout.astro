@@ -1,6 +1,8 @@
 ---
+import { ViewTransitions } from "astro:transitions";
+
 interface Props {
-    title: string
+    title: string;
 }
 ---
 
@@ -10,7 +12,10 @@ interface Props {
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{Astro.props.title}</title>
-        <link rel="icon" type="image/svg+xml" href="/paw.svg"/>
+        <link rel="icon" type="image/svg+xml" href="/paw.svg" />
     </head>
-    <body><slot/></body>
+    <body>
+        <ViewTransitions />
+        <slot />
+    </body>
 </html>

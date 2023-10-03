@@ -1,0 +1,42 @@
+---
+import { inspect } from "util";
+import { preference } from "../lib/mercadopago";
+
+export const prerender = false;
+
+const collection_id = Astro.url.searchParams.get("collection_id");
+const collection_status = Astro.url.searchParams.get("collection_status");
+const payment_id = Astro.url.searchParams.get("payment_id");
+const status = Astro.url.searchParams.get("status");
+const external_reference = Astro.url.searchParams.get("external_reference");
+const payment_type = Astro.url.searchParams.get("payment_type");
+const merchant_order_id = Astro.url.searchParams.get("merchant_order_id");
+const preference_id = Astro.url.searchParams.get("preference_id");
+const site_id = Astro.url.searchParams.get("site_id");
+const processing_mode = Astro.url.searchParams.get("processing_mode");
+const merchant_account_id = Astro.url.searchParams.get("merchant_account_id");
+
+return new Response(
+    inspect(
+        {
+            url: Astro.url,
+            collection_id,
+            collection_status,
+            payment_id,
+            status,
+            external_reference,
+            payment_type,
+            merchant_order_id,
+            preference_id,
+            site_id,
+            processing_mode,
+            merchant_account_id,
+            preference: await preference.get({ preferenceId: preference_id }),
+        },
+        {
+            depth: Infinity,
+            breakLength: 0,
+        },
+    ),
+);
+---

@@ -3,6 +3,8 @@ import DocumentLayout from "../components/layouts/document-layout.astro";
 import PhotoChico from "../../public/photo_chico.jpeg";
 import { Image } from "astro:assets";
 import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.astro";
+
+export const prerender = true;
 ---
 
 <script>
@@ -15,7 +17,7 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
     <div
         class="container m-auto p-4
         [&>h1]:text-2xl
-        [&>h1]:text-bold
+        [&>h1]:font-bold
         [&>h1]:pb-4
         [&>p]:pb-4
         space-y-0"
@@ -23,7 +25,13 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
         <h1>Rifa a beneficio Chico 🐕</h1>
 
         <div class="flex justify-center">
-            <Image src={PhotoChico} alt="Chico en la playa" width={300} />
+            <Image
+                src={PhotoChico}
+                class="rounded shadow-md"
+                alt="Chico en la playa"
+                width={300}
+                transition:name="photo_chico"
+            />
         </div>
 
         <div

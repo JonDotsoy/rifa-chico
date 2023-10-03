@@ -6,6 +6,7 @@ interface Props {
     type: string
     placeholder: string
     autoComplete: string
+    pattern?: string
     required: boolean
 }
 
@@ -15,6 +16,7 @@ export const Input: FC<Props> = ({ name,
     placeholder,
     autoComplete,
     required,
+    pattern
 }) => {
     const inputRef = useRef<null | HTMLInputElement>(null)
 
@@ -28,6 +30,7 @@ export const Input: FC<Props> = ({ name,
             placeholder={placeholder}
             autoComplete={autoComplete}
             required={required}
+            pattern={pattern}
         />
     </>
 }
