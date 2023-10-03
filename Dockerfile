@@ -1,7 +1,6 @@
 FROM node:20 as BUILD
 
 WORKDIR /app
-
 COPY . .
 
 RUN npm ci
