@@ -1,16 +1,23 @@
 FROM node:20 as BUILD
 
+ENV PUBLIC_LANG=cl
+
 WORKDIR /app
-COPY . .
+COPY package*.json /app
 
 RUN npm ci
+
+COPY . /app
 RUN npx astro build
+
+RUN rm -rf node_modules
 
 FROM node:20
 
 WORKDIR /app
 COPY --from=BUILD /app /app
-RUN npm run --omit=dev
+RUN npm i --omit=dev
+RUN npx astro telemetry disable
 
 EXPOSE 4321
 

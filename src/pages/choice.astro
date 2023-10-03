@@ -6,8 +6,6 @@ import PhotoChico from "../../public/photo_chico.jpeg";
 import { Image } from "astro:assets";
 import { firestore } from "../lib/firebase-server";
 
-export const prerender = false;
-
 const docs = await firestore.collection("raffles").get();
 const data: any[] = docs.docs.map((snap) => snap.data());
 ---

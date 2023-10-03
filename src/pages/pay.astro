@@ -5,8 +5,6 @@ import { inspect } from "node:util";
 import ms from "ms";
 import { z } from "zod";
 
-export const prerender = false;
-
 if (Astro.request.method !== "POST") return new Response(null, { status: 404 });
 
 const formData = await Astro.request.formData();
@@ -38,7 +36,7 @@ const docPreference = await preference.create({
             id: `raffle_number_${raffleNumber}`,
             quantity: 1,
             title: `Pago cupo rifa ${raffleNumber}`,
-            unit_price: Number(import.meta.env.CUPO_RIFA),
+            unit_price: Number(process.env.CUPO_RIFA),
             category_id: "social",
             currency_id: "CLP",
             picture_url: new URL("/photo_chico.jpeg", Astro.url).toString(),

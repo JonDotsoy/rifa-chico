@@ -4,8 +4,6 @@ import { payment } from "../../lib/mercadopago";
 import { z } from "zod";
 import { firestore } from "../../lib/firebase-server";
 
-export const prerender = false;
-
 const payloadHookMercadoPago = z.object({
     action: z.string(),
     api_version: z.string(),

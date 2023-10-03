@@ -2,8 +2,6 @@
 import { inspect } from "util";
 import { preference } from "../lib/mercadopago";
 
-export const prerender = false;
-
 const collection_id = Astro.url.searchParams.get("collection_id");
 const collection_status = Astro.url.searchParams.get("collection_status");
 const payment_id = Astro.url.searchParams.get("payment_id");
