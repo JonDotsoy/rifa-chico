@@ -8,6 +8,7 @@ on:
 
 permissions:
   repository-projects: write
+  packages: write
 
 jobs:
 
