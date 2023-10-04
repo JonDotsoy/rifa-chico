@@ -113,14 +113,14 @@ export const App: FC = () => {
                         <h2>Marcar numero</h2>
                         <div className="flex flex-col">
                             <label htmlFor="raffle_number">Numero</label>
-                            <input defaultValue={3} required id="raffle_number" name="raffle_number" type="text" className="border rounded p-2" list="raffle_numbers_list" />
+                            <input required id="raffle_number" name="raffle_number" type="text" className="border rounded p-2" list="raffle_numbers_list" />
                             <datalist id="raffle_numbers_list">
                                 {Array(100).fill(0).map((_, index) => (<option key={index} value={`${index + 1}`}>Numero {index + 1}</option>))}
                             </datalist>
                         </div>
                         <div className="flex flex-col">
                             <label htmlFor="phone">Teléfono</label>
-                            <input defaultValue={947331064} required id="phone" name="phone" type="tel" autoComplete="off" className="border rounded p-2" placeholder="123456789" />
+                            <input required id="phone" name="phone" type="tel" autoComplete="off" className="border rounded p-2" placeholder="123456789" />
                         </div>
                         <div>
                             <button disabled={isLoadingPushRaffle} type="submit" className="px-4 py-2 bg-green-500 text-white rounded shadow disabled:bg-gray-300 transition">Guardar</button>
