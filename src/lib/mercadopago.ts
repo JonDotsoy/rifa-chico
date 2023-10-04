@@ -1,7 +1,6 @@
 import MercadoPago, { Payment, PaymentMethod, Preference } from "mercadopago";
 
-// @ts-ignore
-export const mercadoPago = new MercadoPago.default({
+export const mercadoPago = new MercadoPago({
   accessToken: process.env.SECRET_MERCADOPAGO_ACCESS_TOKEN,
 });
 
