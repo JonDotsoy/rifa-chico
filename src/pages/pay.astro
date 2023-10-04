@@ -35,7 +35,7 @@ const docPreference = await preference.create({
         items: payload.raffleNumber.map((raffleNumber) => ({
             id: `raffle_number_${raffleNumber}`,
             quantity: 1,
-            title: `Pago cupo rifa ${raffleNumber}`,
+            title: `Pago cupo rifa Numero ${raffleNumber + 1}`,
             unit_price: Number(process.env.CUPO_RIFA),
             category_id: "social",
             currency_id: "CLP",
