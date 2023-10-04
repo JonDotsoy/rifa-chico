@@ -1,0 +1,13 @@
+.moveUp {
+    animation: identifier .8s ease 0s 1 normal none;
+    opacity: 0;
+}
+
+@keyframes identifier {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
