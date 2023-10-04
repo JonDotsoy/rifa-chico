@@ -1,6 +1,11 @@
 ---
 import DocumentLayout from "../components/layouts/document-layout.astro";
 import PhotoChico from "../../public/photo_chico.jpeg";
+import PhotoChico2 from "../../public/photo_chico_2.jpeg";
+import PremioCajaMercaderia from "../../public/premio-caja-mercaderia.jpg";
+import PremioHuaweiBand6Rosa from "../../public/premio-huawei-band-6-rosa.jpeg";
+import PremioStickerGigante from "../../public/premio-sticker-gigante.png";
+import PremioSabanasAzul from "../../public/premio-sabanas-azul.webp";
 import { Image } from "astro:assets";
 import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.astro";
 ---
@@ -17,18 +22,27 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
         [&>h1]:text-2xl
         [&>h1]:font-bold
         [&>h1]:pb-4
+        [&>h2]:text-xl
+        [&>h2]:font-bold
+        [&>h2]:pb-4
         [&>p]:pb-4
         space-y-0"
     >
         <h1>Rifa a beneficio Chico 🐕</h1>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center gap-4 flex-wrap">
             <Image
-                src={PhotoChico}
+                src={PhotoChico2}
                 class="rounded shadow-md"
                 alt="Chico en la playa"
                 width={300}
                 transition:name="photo_chico"
+            />
+            <Image
+                src={PhotoChico}
+                class="rounded shadow-md hidden md:block"
+                alt="Chico en la playa"
+                width={300}
             />
         </div>
 
@@ -60,10 +74,15 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 
         <p>
             Hoy les queremos contar la historia de Chico, un fiel amigo de
-            cuatro patas que ha sido parte de nuestras vidas durante los últimos
-            3 años. A lo largo de los años, Chico nos ha brindado amor
-            incondicional, alegría y compañía, y ahora es nuestro turno de estar
-            allí para él en su momento de necesidad.
+            cuatro patas que llegó a nuestras vidas hace 3 años. Cuando llegó a
+            casa, Chico ya tenía la respetable edad de 14 años, y su historia
+            con nosotros comenzó después de un trágico accidente, cuando fue
+            atropellado. En ese momento, el veterinario nos dio un pronóstico de
+            solo 3 meses de vida, pero con amor, cuidados y determinación, Chico
+            ha desafiado todas las expectativas y sigue siendo una parte valiosa
+            de nuestras vidas después de 3 años. A lo largo de los años, Chico
+            nos ha brindado amor incondicional, alegría y compañía, y ahora es
+            nuestro turno de estar allí para él en su momento de necesidad.
         </p>
 
         <p>
@@ -76,16 +95,41 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 
         <p>
             El valor por número de la rifa es de 3000 pesos, y estamos buscando
-            recaudar un total de 600,000 pesos para financiar la operación de
+            recaudar un total de 300,000 pesos para financiar la operación de
             Chico. Sabemos que es un objetivo ambicioso, pero con la ayuda de
             nuestra comunidad, creemos que podemos lograrlo.
         </p>
+
+        <h2>Premios</h2>
+
+        <div class="flex justify-center gap-4 flex-wrap">
+            <Image
+                src={PremioHuaweiBand6Rosa}
+                alt="Premio Huawei Band 6 Rosa"
+                height={120}
+            />
+            <Image
+                src={PremioStickerGigante}
+                alt="Premio Sticker Personalizado"
+                height={120}
+            />
+            <Image
+                src={PremioSabanasAzul}
+                alt="Premio Sábana Azul"
+                height={120}
+            />
+            <Image
+                src={PremioCajaMercaderia}
+                alt="Premio Caja de mercaderia"
+                height={120}
+            />
+        </div>
 
         <p>
             Al comprar un número de la rifa, no solo tienes la oportunidad de
             ganar emocionantes premios, como cajas de mercadería básica, un
             reloj Huawei Band 6 reacondicionado, un juego de sábanas de dos
-            plazas, o incluso un Loco con diseño personalizado de alta
+            plazas, o incluso una imagen con diseño personalizado de alta
             durabilidad para exteriores, sino que también estarás contribuyendo
             directamente a la salud y felicidad de Chico.
         </p>
@@ -105,7 +149,7 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 
         <p>
             Para comprar un número de la rifa o hacer una donación directa,
-            comunícate con nosotros <a
+            comunícate con nosotros al <a
                 class="inline-flex
                 space-x-1
                 [&>span]:flex-1
@@ -115,7 +159,7 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
                 href="https://wa.me/56963187228"
                 target="_blank"
             >
-                <span>Ir a donar directo</span>
+                <span>9 6318 7228</span>
                 <WhatsappSvgrepoComSvg />
             </a>. ¡Cada pequeña contribución nos acerca un paso más a nuestro
             objetivo!
@@ -129,5 +173,16 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 
         <p>Con gratitud,</p>
         <p>Dennis Mancilla y el equipo de apoyo a Chico 🐾</p>
+    </div>
+    <div class="m-auto container py-8">
+        <p class="text-sm text-center">
+            Sitio creado por Jonathan Delgado (<a
+                href="https://jon.soy"
+                target="_blank">jon.soy</a
+            >)
+        </p>
+        <p class="text-sm text-center">
+            <a href="./about-site">Ver condiciones generales</a>
+        </p>
     </div>
 </DocumentLayout>
