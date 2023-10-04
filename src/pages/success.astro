@@ -1,40 +1,81 @@
 ---
 import { inspect } from "util";
 import { preference } from "../lib/mercadopago";
+import DocumentLayout from "../components/layouts/document-layout.astro";
 
-const collection_id = Astro.url.searchParams.get("collection_id");
-const collection_status = Astro.url.searchParams.get("collection_status");
-const payment_id = Astro.url.searchParams.get("payment_id");
-const status = Astro.url.searchParams.get("status");
-const external_reference = Astro.url.searchParams.get("external_reference");
-const payment_type = Astro.url.searchParams.get("payment_type");
-const merchant_order_id = Astro.url.searchParams.get("merchant_order_id");
-const preference_id = Astro.url.searchParams.get("preference_id");
-const site_id = Astro.url.searchParams.get("site_id");
-const processing_mode = Astro.url.searchParams.get("processing_mode");
-const merchant_account_id = Astro.url.searchParams.get("merchant_account_id");
+// const collection_id = Astro.url.searchParams.get("collection_id");
+// const collection_status = Astro.url.searchParams.get("collection_status");
+// const payment_id = Astro.url.searchParams.get("payment_id");
+// const status = Astro.url.searchParams.get("status");
+// const external_reference = Astro.url.searchParams.get("external_reference");
+// const payment_type = Astro.url.searchParams.get("payment_type");
+// const merchant_order_id = Astro.url.searchParams.get("merchant_order_id");
+// const preference_id = Astro.url.searchParams.get("preference_id");
+// const site_id = Astro.url.searchParams.get("site_id");
+// const processing_mode = Astro.url.searchParams.get("processing_mode");
+// const merchant_account_id = Astro.url.searchParams.get("merchant_account_id");
 
-return new Response(
-    inspect(
-        {
-            url: Astro.url,
-            collection_id,
-            collection_status,
-            payment_id,
-            status,
-            external_reference,
-            payment_type,
-            merchant_order_id,
-            preference_id,
-            site_id,
-            processing_mode,
-            merchant_account_id,
-            preference: await preference.get({ preferenceId: preference_id }),
-        },
-        {
-            depth: Infinity,
-            breakLength: 0,
-        },
-    ),
-);
+// return new Response(
+//     inspect(
+//         {
+//             url: Astro.url,
+//             collection_id,
+//             collection_status,
+//             payment_id,
+//             status,
+//             external_reference,
+//             payment_type,
+//             merchant_order_id,
+//             preference_id,
+//             site_id,
+//             processing_mode,
+//             merchant_account_id,
+//             preference: await preference.get({ preferenceId: preference_id }),
+//         },
+//         {
+//             depth: Infinity,
+//             breakLength: 0,
+//         },
+//     ),
+// );
 ---
+
+<DocumentLayout title="¡Gracias por Ser un Héroe para Chico!">
+    <div class="
+        container
+        m-auto
+        p-4
+        [&>h1]:text-2xl
+        [&>h1]:pb-4
+        [&>p]:pb-4
+    ">
+        <h1>¡Gracias por Ser un Héroe para Chico!</h1>
+        <p>Queridos donantes y amigos de Chico,</p>
+        <p>
+            Queremos expresar nuestro sincero agradecimiento por su generosidad
+            y apoyo inquebrantable. Cada uno de ustedes es un héroe en la vida
+            de Chico y un rayo de esperanza en nuestra lucha por su bienestar.
+        </p>
+        <p>
+            Gracias a sus donaciones, estamos un paso más cerca de alcanzar
+            nuestra meta y brindarle a Chico la oportunidad de una vida mejor y
+            libre de dolor. Su amor y solidaridad nos inspiran y nos recuerdan
+            que la comunidad es capaz de hacer cosas maravillosas cuando se une
+            en causa común.
+        </p>
+        <p>
+            Si desean ayudar aún más a Chico y a nuestra causa, los invitamos a
+            compartir la rifa con amigos, familiares y en sus redes sociales.
+            Cada vez que comparten, extendemos el círculo de apoyo y aumentamos
+            las posibilidades de alcanzar nuestra meta de recaudación.
+        </p>
+        <p>
+            Juntos, podemos marcar la diferencia en la vida de Chico y hacer que
+            su historia sea un ejemplo de amor, resiliencia y comunidad. Gracias
+            por formar parte de esta hermosa historia de esperanza y
+            solidaridad.
+        </p>
+        <p>Con gratitud,</p>
+        <p>Dennis Mancilla y el equipo de apoyo a Chico 🐾</p>
+    </div>
+</DocumentLayout>
