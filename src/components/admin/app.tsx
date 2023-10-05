@@ -1,8 +1,8 @@
-import { useEffect, type FC, useState, type FormEvent, type PropsWithChildren, useRef } from "react";
+import { useEffect, type FC, useState, type FormEvent, type PropsWithChildren, useRef, Fragment, useId } from "react";
 import useSWR from "swr"
 import { app } from "../../lib/firebase"
 import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, updateCurrentUser, type User } from "firebase/auth"
-import { collection, getDocs, getFirestore, setDoc, doc } from "firebase/firestore"
+import { collection, getDocs, getFirestore, setDoc, doc, updateDoc } from "firebase/firestore"
 import classNames from "classnames";
 import styles from "./app.module.css";
 
@@ -35,7 +35,7 @@ const usePushRaffle = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState<unknown>(null)
 
-    const push = async ({ id, phone }: { id: string, phone: string }) => {
+    const push = async ({ id, phone }: { id: string, phone: string, }) => {
         setIsLoading(true)
         try {
             await setDoc(
@@ -47,9 +47,39 @@ const usePushRaffle = () => {
                     phone: {
                         number: phone,
                     },
+                    createdAt: new Date(),
                 })
         } catch (ex) {
+            setError(ex);
+            console.error(ex);
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
+    return {
+        isLoading,
+        error,
+        push
+    }
+}
+
+const usePushNoteRaffle = () => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<unknown>(null)
+
+    const push = async ({ id, note }: { id: string, note: string, }) => {
+        setIsLoading(true)
+        try {
+            await updateDoc(
+                doc(collection(firestore, 'raffles'), id)
+                , {
+                    note,
+                    updatedAt: new Date(),
+                })
+        } catch (ex) {
+            setError(ex);
+            console.error(ex);
         } finally {
             setIsLoading(false)
         }
@@ -104,6 +134,42 @@ const ButtonClip: FC<PropsWithChildren<{ value: string }>> = ({ children, value 
     </>
 }
 
+const UpdateNote: FC<{ raffleId: string, noteDefault }> = ({ raffleId, noteDefault }) => {
+    const id = useId()
+    const form = useRef<HTMLFormElement | null>()
+    const [editionActive, setEditionActive] = useState(false)
+    const { isLoading, push } = usePushNoteRaffle()
+
+    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        if (form.current) {
+            const formData = new FormData(form.current)
+
+            const noteValue = formData.get('note').toString()
+
+            push({ id: raffleId, note: noteValue })
+        }
+    }
+
+    return <>
+        <span className="max-md:col-span-3 md:col-span-1 md:flex md:justify-end">
+            <button onClick={() => setEditionActive(e => !e)} className="bg-blue-400 text-white px-3 rounded shadow transition focus:shadow-sm focus:bg-blue-300">Editar Nota</button>
+        </span>
+        {editionActive && <>
+            <div className="col-span-3 p-4 bg-gray-100 shadow-inner">
+                <form ref={form} onSubmit={onSubmit}>
+                    <label className="block pb-2" htmlFor={id}>Notas:</label>
+                    <textarea name="note" id={id} defaultValue={noteDefault} className="block w-full p-4 border shadow rounded" placeholder="Tus notas aquí" rows={10}></textarea>
+                    <div className="pt-2">
+                        <button type="submit" disabled={isLoading} className="bg-green-400 text-white px-3 rounded shadow-md focus:shadow-sm transition disabled:bg-gray-300 disabled:shadow-none disabled:text-gray-200">Guardar</button>
+                        {isLoading && <span className="text-sm text-gray-500"> Cargando...</span>}
+                    </div>
+                </form>
+            </div>
+        </>}
+    </>
+}
+
 export const App: FC = () => {
     const { isLoading: isLoadingPushRaffle, push: pushRaffle } = usePushRaffle()
     const { user } = useAuth()
@@ -154,12 +220,16 @@ export const App: FC = () => {
                         <div className={classNames('text-gray-300 text-sm', { 'opacity-0': !isLoadingRaffles })}>Cargando...</div>
                         {!raffles && <><span className="text-gray-400">Sin numeros</span></>}
                         <div>
-                            {raffles?.map(raffle => (
-                                <div key={JSON.stringify(raffle)} className="border rounded transition hover:shadow flex gap-2 [&>span]:p-4">
-                                    <span className="border-r">Ticket: {raffle.item.id.substring(14)}</span>
-                                    <span><a href={`tel:+56${raffle.phone.number}`}>+56 {raffle.phone.number}</a></span>
-                                </div>
-                            ))}
+                            <div className="border rounded transition hover:shadow grid [&>span]:p-2 md:[&>span]:p-4">
+                                {raffles?.map(raffle => (
+                                    <Fragment key={raffle.item.id}>
+                                        <span className="max-md:col-span-3">Ticket: {raffle.item.id.substring(14)}</span>
+                                        <span className="max-md:col-span-3"><a href={`https://wa.me/56${raffle.phone.number}`} target="_blank">+56 {raffle.phone.number}</a></span>
+                                        <UpdateNote raffleId={raffle.item.id} noteDefault={raffle.note}></UpdateNote>
+                                        <span className="col-span-3 border-t mx-4"></span>
+                                    </Fragment>
+                                ))}
+                            </div>
                         </div>
                     </div>
 

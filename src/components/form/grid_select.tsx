@@ -30,6 +30,7 @@ export const GridSelect: FC<Prop> = ({ total = 1, values = [] }) => {
                         checked={!!check}
                         disabled={!!check} />
                     <label key={index} htmlFor={key}
+                        
                         className={classNames(`
                             border
                             w-24

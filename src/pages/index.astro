@@ -17,32 +17,14 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 </script>
 
 <script>
-    const intersectionObserver = new IntersectionObserver(
-        (elms) => {
-            for (const elm of elms) {
-                const element = elm.target;
-                if (element instanceof HTMLElement) {
-                    const effectToggleClass = element.dataset.effectToggleClass;
-                    const effectAt = element.dataset.effectAt;
-                    const targetAt = document.querySelector(effectAt);
-                    if (targetAt) {
-                        if (elm.isIntersecting)
-                            targetAt.classList.remove(effectToggleClass);
-                        else targetAt.classList.add(effectToggleClass);
-                    }
-                }
-            }
-        },
-        {
-            threshold: 1,
-        },
-    );
-    intersectionObserver.observe(document.querySelector("#sticky-effect"));
+    import "sticky-pinned/lib/define";
 </script>
 
 <DocumentLayout title="Rifa a beneficio Chico 🐕">
-    <div
-        class="container m-auto p-4
+    <main>
+        <article>
+            <div
+                class="container m-auto p-4
         [&>h1]:text-2xl
         [&>h1]:font-bold
         [&>h1]:pb-4
@@ -51,171 +33,170 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
         [&>h2]:pb-4
         [&>p]:pb-4
         space-y-0"
-    >
-        <h1>Rifa a beneficio Chico 🐕</h1>
+            >
+                <h1>Rifa a beneficio Chico 🐕</h1>
 
-        <div class="flex justify-center gap-4 flex-wrap">
-            <Image
-                src={PhotoChico2}
-                class="rounded shadow-md"
-                alt="Chico en el parque"
-                width={300}
-                transition:name="photo_chico"
-            />
-            <Image
-                src={PhotoChico}
-                class="rounded shadow-md hidden md:block"
-                alt="Chico en la playa"
-                width={300}
-            />
-        </div>
-    </div>
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <Image
+                        src={PhotoChico2}
+                        class="rounded shadow-md"
+                        alt="Chico en el parque"
+                        width={300}
+                        transition:name="photo_chico"
+                    />
+                    <Image
+                        src={PhotoChico}
+                        class="rounded shadow-md hidden md:block"
+                        alt="Chico en la playa"
+                        width={300}
+                    />
+                </div>
+            </div>
 
-    <span
-        id="sticky-effect"
-        data-effect-at="[x-with-sticky-effect]"
-        data-effect-toggle-class="shadow-effect-active"></span>
-    <div
-        x-with-sticky-effect
-        class="pb-4 pt-2 flex justify-center sticky top-0 bg-white bg-opacity-80 backdrop-blur-sm space-x-4 [&.shadow-effect-active]:shadow-md"
-    >
-        <a
-            class="px-4 py-2 inline-block rounded bg-blue-400 text-white shadow"
-            href="/choice"
-        >
-            Ver numeros y donar
-        </a>
-        <a
-            class="px-4 py-2 inline-flex rounded bg-green-400 text-white shadow
+            <sticky-pinned for="navbar-sticky"></sticky-pinned>
+
+            <aside
+                id="navbar-sticky"
+                class="pb-4 pt-2 flex justify-center sticky top-0 bg-white bg-opacity-80 backdrop-blur-sm space-x-4 transition-shadow [&[data-sticky-pinned='on']]:shadow-md"
+            >
+                <a
+                    class="px-4 py-2 inline-block rounded bg-blue-400 text-white shadow"
+                    href="/choice"
+                >
+                    Ver numeros y donar
+                </a>
+                <a
+                    class="px-4 py-2 inline-flex rounded bg-green-400 text-white shadow
                     space-x-2
                     [&>span]:flex-1
                     [&>svg]:flex-none
                     [&>svg]:fill-white
                     [&>svg]:w-6"
-            href="https://wa.me/56963187228"
-            target="_blank"
-        >
-            <span>Ir a donar directo</span>
-            <WhatsappSvgrepoComSvg />
-        </a>
-    </div>
+                    href="https://wa.me/56963187228"
+                    target="_blank"
+                >
+                    <span>Ir a donar directo</span>
+                    <WhatsappSvgrepoComSvg />
+                </a>
+            </aside>
 
-    <div
-        class="container m-auto p-4
-        [&>h1]:text-2xl
-        [&>h1]:font-bold
-        [&>h1]:pb-4
-        [&>h2]:text-xl
-        [&>h2]:font-bold
-        [&>h2]:pb-4
-        [&>p]:pb-4
-        space-y-0"
-    >
-        <p>Querida comunidad,</p>
+            <div
+                class="container m-auto p-4 [&>h1]:text-2xl [&>h1]:font-bold [&>h1]:pb-4 [&>h2]:text-xl [&>h2]:font-bold [&>h2]:pb-4 [&>p]:pb-4 space-y-0"
+            >
+                <p>Querida comunidad,</p>
 
-        <p>
-            Hoy les queremos contar la historia de Chico, un fiel amigo de
-            cuatro patas que llegó a nuestras vidas hace 3 años. Cuando llegó a
-            casa, Chico ya tenía la respetable edad de 14 años, y su historia
-            con nosotros comenzó después de un trágico accidente, cuando fue
-            atropellado. En ese momento, el veterinario nos dio un pronóstico de
-            solo 3 meses de vida, pero con amor, cuidados y determinación, Chico
-            ha desafiado todas las expectativas y sigue siendo una parte valiosa
-            de nuestras vidas después de 3 años. A lo largo del tiempo, Chico
-            nos ha brindado amor incondicional, alegría y compañía, y ahora es
-            nuestro turno de estar allí para él en su momento de necesidad.
-        </p>
+                <p>
+                    Hoy les queremos contar la historia de Chico, un fiel amigo
+                    de cuatro patas que llegó a nuestras vidas hace 3 años.
+                    Cuando llegó a casa, Chico ya tenía la respetable edad de 14
+                    años, y su historia con nosotros comenzó después de un
+                    trágico accidente, cuando fue atropellado. En ese momento,
+                    el veterinario nos dio un pronóstico de solo 3 meses de
+                    vida, pero con amor, cuidados y determinación, Chico ha
+                    desafiado todas las expectativas y sigue siendo una parte
+                    valiosa de nuestras vidas después de 3 años. A lo largo del
+                    tiempo, Chico nos ha brindado amor incondicional, alegría y
+                    compañía, y ahora es nuestro turno de estar allí para él en
+                    su momento de necesidad.
+                </p>
 
-        <p>
-            Chico ha sido diagnosticado con cáncer testicular, una condición que
-            afecta su calidad de vida y le causa dolor. La buena noticia es que
-            una operación puede eliminar este cáncer y brindarle una vida más
-            cómoda y feliz. Sin embargo, enfrentamos un desafío financiero para
-            cubrir el costo de esta cirugía vital.
-        </p>
+                <p>
+                    Chico ha sido diagnosticado con cáncer testicular, una
+                    condición que afecta su calidad de vida y le causa dolor. La
+                    buena noticia es que una operación puede eliminar este
+                    cáncer y brindarle una vida más cómoda y feliz. Sin embargo,
+                    enfrentamos un desafío financiero para cubrir el costo de
+                    esta cirugía vital.
+                </p>
 
-        <p>
-            El valor por número de la rifa es de $3.000.- pesos, y estamos
-            buscando recaudar un total de $300.000.- pesos para financiar su
-            operación. Sabemos que es un objetivo ambicioso, pero con la ayuda
-            de nuestra comunidad, creemos que podemos lograrlo.
-        </p>
+                <p>
+                    El valor por número de la rifa es de $3.000.- pesos, y
+                    estamos buscando recaudar un total de $300.000.- pesos para
+                    financiar su operación. Sabemos que es un objetivo
+                    ambicioso, pero con la ayuda de nuestra comunidad, creemos
+                    que podemos lograrlo.
+                </p>
 
-        <h2>Premios</h2>
+                <h2>Premios</h2>
 
-        <div class="flex justify-center gap-4 flex-wrap">
-            <Image
-                src={PremioHuaweiBand6Rosa}
-                alt="Premio Huawei Band 6 Rosa"
-                height={120}
-            />
-            <Image
-                src={PremioStickerGigante}
-                alt="Premio Sticker Personalizado"
-                height={120}
-            />
-            <Image
-                src={PremioSabanasAzul}
-                alt="Premio Sábana Azul"
-                height={120}
-            />
-            <Image
-                src={PremioCajaMercaderia}
-                alt="Premio Caja de mercaderia"
-                height={120}
-            />
-        </div>
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <Image
+                        src={PremioHuaweiBand6Rosa}
+                        alt="Premio Huawei Band 6 Rosa"
+                        height={120}
+                    />
+                    <Image
+                        src={PremioStickerGigante}
+                        alt="Premio Sticker Personalizado"
+                        height={120}
+                    />
+                    <Image
+                        src={PremioSabanasAzul}
+                        alt="Premio Sábanas Azul"
+                        height={120}
+                    />
+                    <Image
+                        src={PremioCajaMercaderia}
+                        alt="Premio Caja de mercaderia"
+                        height={120}
+                    />
+                </div>
 
-        <p>
-            Al comprar un número de la rifa, no solo tienes la oportunidad de
-            ganar emocionantes premios, como cajas de mercadería básica, un
-            reloj Huawei Band 6 reacondicionado, un juego de sábanas de dos
-            plazas, o incluso una imagen con diseño personalizado de alta
-            durabilidad para interiores o exteriores, sino que también estarás
-            contribuyendo directamente a la salud y felicidad de nuestro canino.
-        </p>
+                <p>
+                    Al comprar un número de la rifa, no solo tienes la
+                    oportunidad de ganar emocionantes premios, como cajas de
+                    mercadería básica, un reloj Huawei Band 6 reacondicionado,
+                    un juego de sábanas de dos plazas, o incluso una imagen con
+                    diseño personalizado de alta durabilidad para interiores o
+                    exteriores, sino que también estarás contribuyendo
+                    directamente a la salud y felicidad de nuestro canino.
+                </p>
 
-        <p>
-            Para brindarte tranquilidad, te mantendremos informado sobre nuestro
-            progreso a través de WhatsApp, compartiendo actualizaciones sobre el
-            estado del canino y el proceso de recaudación de fondos.
-        </p>
+                <p>
+                    Para brindarte tranquilidad, te mantendremos informado sobre
+                    nuestro progreso a través de WhatsApp, compartiendo
+                    actualizaciones sobre el estado del canino y el proceso de
+                    recaudación de fondos.
+                </p>
 
-        <p>
-            Por favor, únete a nosotros en esta noble causa. Tu apoyo es
-            esencial para salvar la vida de Chico y permitirle disfrutar de sus
-            años dorados en plenitud. Juntos, podemos hacer la diferencia y
-            mostrar cuánto valoramos a nuestros fieles amigos peludos.
-        </p>
+                <p>
+                    Por favor, únete a nosotros en esta noble causa. Tu apoyo es
+                    esencial para salvar la vida de Chico y permitirle disfrutar
+                    de sus años dorados en plenitud. Juntos, podemos hacer la
+                    diferencia y mostrar cuánto valoramos a nuestros fieles
+                    amigos peludos.
+                </p>
 
-        <p>
-            Para comprar un número de la rifa o hacer una donación directa,
-            comunícate con nosotros al <a
-                class="inline-flex
+                <p>
+                    Para comprar un número de la rifa o hacer una donación
+                    directa, comunícate con nosotros al <a
+                        class="inline-flex
                 space-x-1
                 [&>span]:flex-1
                 [&>svg]:flex-none
                 [&>svg]:fill-green-400
                 [&>svg]:w-4"
-                href="https://wa.me/56963187228"
-                target="_blank"
-            >
-                <span>9 6318 7228</span>
-                <WhatsappSvgrepoComSvg />
-            </a>. ¡Cada pequeña contribución nos acerca un paso más a nuestro
-            objetivo!
-        </p>
+                        href="https://wa.me/56963187228"
+                        target="_blank"
+                    >
+                        <span>9 6318 7228</span>
+                        <WhatsappSvgrepoComSvg />
+                    </a>. ¡Cada pequeña contribución nos acerca un paso más a
+                    nuestro objetivo!
+                </p>
 
-        <p>
-            Gracias por ser parte de esta historia de amor y esperanza. Juntos,
-            podemos darle a Chico la oportunidad de una vida mejor y más
-            saludable.
-        </p>
+                <p>
+                    Gracias por ser parte de esta historia de amor y esperanza.
+                    Juntos, podemos darle a Chico la oportunidad de una vida
+                    mejor y más saludable.
+                </p>
 
-        <p>Con gratitud,</p>
-        <p>Dennis Mancilla y el equipo de apoyo a Chico 🐾</p>
-    </div>
-    <div class="m-auto container py-8">
+                <p>Con gratitud,</p>
+                <p>Dennis Mancilla y el equipo de apoyo a Chico 🐾</p>
+            </div>
+        </article>
+    </main>
+    <footer class="m-auto container py-8">
         <p class="text-sm text-center">
             Sitio creado por Jonathan Delgado (<a
                 href="https://jon.soy"
@@ -225,5 +206,5 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
         <p class="text-sm text-center">
             <a href="./about-site">Ver condiciones generales</a>
         </p>
-    </div>
+    </footer>
 </DocumentLayout>
