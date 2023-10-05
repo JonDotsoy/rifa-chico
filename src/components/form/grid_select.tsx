@@ -1,6 +1,11 @@
 import { type FC } from "react"
 import classNames from "classnames"
 
+const privacyPhoneNumber = (value: string) => {
+    const v = value.replace(/[^\d]/gm, '')
+    return `***${v.substring(v.length - 5)}`
+}
+
 interface Prop {
     total: number
     values?: { item: { id: string }, phone: { number: string } }[]
@@ -30,7 +35,7 @@ export const GridSelect: FC<Prop> = ({ total = 1, values = [] }) => {
                         checked={!!check}
                         disabled={!!check} />
                     <label key={index} htmlFor={key}
-                        
+
                         className={classNames(`
                             border
                             w-24
@@ -49,7 +54,7 @@ export const GridSelect: FC<Prop> = ({ total = 1, values = [] }) => {
                         })}
                     >
                         <span>{index + 1}</span>
-                        {check && <span className="text-sm -rotate-6 -translate-y-2 bg-green-400">{'*'.repeat(check.phone.number.length - 5)}{check.phone.number.substring(0, check.phone.number.length - 5)}</span>}
+                        {check && <span className="text-sm -rotate-6 -translate-y-2 bg-green-400">{privacyPhoneNumber(check.phone.number)}</span>}
                     </label>
                 </div>
             }
