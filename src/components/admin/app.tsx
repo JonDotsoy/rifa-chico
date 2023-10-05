@@ -225,7 +225,7 @@ export const App: FC = () => {
                             <div className="border rounded transition hover:shadow grid [&>span]:p-2 md:[&>span]:p-4">
                                 {raffles?.sort((a, b) => Number(a.item.id.substring(14)) - Number(b.item.id.substring(14))).map(raffle => (
                                     <Fragment key={raffle.item.id}>
-                                        <span className="max-md:col-span-3">Ticket: {raffle.item.id.substring(14)}</span>
+                                        <span className="max-md:col-span-3">Ticket: {Number(raffle.item.id.substring(14)) + 1}</span>
                                         <span className="max-md:col-span-3"><a href={`https://wa.me/56${raffle.phone.number}`} target="_blank">+56 {raffle.phone.number}</a></span>
                                         <UpdateNote raffleId={raffle.item.id} noteDefault={raffle.note}></UpdateNote>
                                         <span className="col-span-3 border-t mx-4"></span>
