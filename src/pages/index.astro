@@ -17,7 +17,30 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 </script>
 
 <script>
-    import "sticky-pinned/lib/define";
+    const ON = "on";
+    const OFF = "off";
+
+    export class StickyPinned extends HTMLElement {
+        constructor() {
+            super();
+            const forSelector = this.attributes.getNamedItem("for")?.value;
+
+            const intersectionObserver = new IntersectionObserver(([elm]) => {
+                if (forSelector) {
+                    const targetElement = document.getElementById(forSelector);
+                    if (targetElement) {
+                        if (elm) {
+                            targetElement.dataset.stickyPinned =
+                                elm.isIntersecting ? OFF : ON;
+                        }
+                    }
+                }
+            });
+
+            intersectionObserver.observe(this);
+        }
+    }
+    customElements.define("sticky-pinned", StickyPinned);
 </script>
 
 <DocumentLayout title="Rifa a beneficio Chico 🐕">
