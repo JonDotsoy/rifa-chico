@@ -26,10 +26,11 @@ if (Astro.request.method === "POST") {
                 .set(paymentDetail);
             const phone = paymentDetail.additional_info.payer.phone;
             for (const item of paymentDetail.additional_info.items) {
-                await firestore
-                    .collection("raffles")
-                    .doc(`${item.id}`)
-                    .set({ item, phone, createdAt: new Date() });
+                await firestore.collection("raffles").doc(`${item.id}`).set({
+                    item,
+                    phone,
+                    createdAt: new Date(),
+                });
             }
         }
         return new Response(
