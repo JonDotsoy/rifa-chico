@@ -1,17 +1,23 @@
 ---
 import { ViewTransitions } from "astro:transitions";
+import { getImage } from "astro:assets";
+
+import PhotoChico2 from "../../../public/photo_chico_2.jpeg";
+
+const ogImage = await getImage({
+    src: PhotoChico2,
+    format: "jpg",
+    alt: "Chico en el parque",
+    width: 256,
+    height: 256,
+});
+
+const ogImageUrl = new URL(ogImage.src, Astro.url);
 
 interface Props {
     title: string;
 }
 ---
-
-<style>
-    /* body {
-        background-color: #f8f8f8;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='386' height='46.3' viewBox='0 0 1000 120'%3E%3Cg fill='none' stroke='%23FFFFFF' stroke-width='11.1' %3E%3Cpath d='M-500 75c0 0 125-30 250-30S0 75 0 75s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 45c0 0 125-30 250-30S0 45 0 45s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 105c0 0 125-30 250-30S0 105 0 105s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 15c0 0 125-30 250-30S0 15 0 15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500-15c0 0 125-30 250-30S0-15 0-15s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3Cpath d='M-500 135c0 0 125-30 250-30S0 135 0 135s125 30 250 30s250-30 250-30s125-30 250-30s250 30 250 30s125 30 250 30s250-30 250-30'/%3E%3C/g%3E%3C/svg%3E");
-    } */
-</style>
 
 <html lang={import.meta.env.PUBLIC_LANG}>
     <head>
@@ -19,6 +25,40 @@ interface Props {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{Astro.props.title}</title>
         <link rel="icon" type="image/svg+xml" href="/paw.svg" />
+        <meta
+            property="og:description"
+            content="¡Únete a nuestra rifa solidaria en apoyo a Chico, el fiel amigo peludo de nuestra comunidad! Cada número de rifa a 3000 pesos nos acerca a nuestro objetivo de 300,000 pesos para su operación."
+        />
+        <meta property="og:url" content={new URL("/", Astro.url).toString()} />
+        <meta property="og:title" content="Rifa a beneficio Chico 🐕" />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="es_CL" />
+        <meta property="og:image" content={ogImageUrl.toString()} />
+        {
+            ogImageUrl.protocol === "https:" && (
+                <meta
+                    property="og:image:secure_url"
+                    content={ogImageUrl.toString()}
+                />
+            )
+        }
+        <meta property="og:image:alt" content="Chico en el parque" />
+        {
+            ogImage.options.width && (
+                <meta
+                    property="og:image:width"
+                    content={`${ogImage.options.width}`}
+                />
+            )
+        }
+        {
+            ogImage.options.height && (
+                <meta
+                    property="og:image:height"
+                    content={`${ogImage.options.height}`}
+                />
+            )
+        }
     </head>
     <body>
         <ViewTransitions />
