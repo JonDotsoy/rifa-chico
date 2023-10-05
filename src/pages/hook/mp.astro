@@ -29,7 +29,7 @@ if (Astro.request.method === "POST") {
                 await firestore
                     .collection("raffles")
                     .doc(`${item.id}`)
-                    .set({ item, phone });
+                    .set({ item, phone, createdAt: new Date() });
             }
         }
         return new Response(

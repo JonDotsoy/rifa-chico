@@ -1,5 +1,5 @@
 import { useEffect, type FC, useState, type FormEvent, type PropsWithChildren, useRef, Fragment, useId } from "react";
-import useSWR from "swr"
+import useSWR, { mutate } from "swr"
 import { app } from "../../lib/firebase"
 import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, updateCurrentUser, type User } from "firebase/auth"
 import { collection, getDocs, getFirestore, setDoc, doc, updateDoc } from "firebase/firestore"
@@ -49,6 +49,7 @@ const usePushRaffle = () => {
                     },
                     createdAt: new Date(),
                 })
+            mutate('listRaffles')
         } catch (ex) {
             setError(ex);
             console.error(ex);
@@ -77,6 +78,7 @@ const usePushNoteRaffle = () => {
                     note,
                     updatedAt: new Date(),
                 })
+            mutate('listRaffles')
         } catch (ex) {
             setError(ex);
             console.error(ex);
@@ -175,8 +177,8 @@ export const App: FC = () => {
     const { user } = useAuth()
     const {
         data: raffles,
-        isLoading: isLoadingRaffles
-    } = useSWR(user && ['listRaffles'], listRaffles)
+        isLoading: isLoadingRaffles,
+    } = useSWR(user && 'listRaffles', listRaffles)
 
     const signIn = () => {
         signInWithRedirect(auth, new GoogleAuthProvider())
