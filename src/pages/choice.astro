@@ -6,6 +6,7 @@ import PhotoChico from "../../public/photo_chico.jpeg";
 import { Image } from "astro:assets";
 import { firestore } from "../lib/firebase-server";
 import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.astro";
+import MercadoPagoLogoSvg from "../components/icons/mercado-pago-logo.svg.astro";
 
 const docs = await firestore.collection("raffles").get();
 const data: any[] = docs.docs.map((snap) => snap.data());
@@ -113,18 +114,31 @@ const data: any[] = docs.docs.map((snap) => snap.data());
                 <div class="flex gap-4">
                     <button
                         type="submit"
-                        class="border px-4 py-2 rounded bg-blue-400 text-white shadow"
-                        >Ir a Pagar</button
+                        class="px-4 py-2 rounded bg-blue-400 text-white inline-flex space-x-2 [&>span]:flex-1
+                        transition
+                        shadow
+                        hover:shadow-md
+                        focus:shadow-inner
+                        [&>svg]:flex-none
+                        [&>svg]:h-6
+                        "
                     >
+                        <span>Ir a Pagar</span>
+                        <MercadoPagoLogoSvg />
+                    </button>
                     <button
                         type="button"
                         x-wa-send
-                        class="px-4 py-2 inline-flex rounded bg-green-400 text-white shadow
+                        class="px-4 py-2 inline-flex rounded bg-green-400 text-white
                                 space-x-2
+                                transition
+                                shadow
+                                hover:shadow-md
+                                focus:shadow-inner
                                 [&>span]:flex-1
                                 [&>svg]:flex-none
                                 [&>svg]:fill-white
-                                [&>svg]:w-6"
+                                [&>svg]:h-6"
                         data-base-href="https://wa.me"
                         data-phone="56963187228"
                         data-text-template="Hola, quiero comprar los numeros {numbers}"
