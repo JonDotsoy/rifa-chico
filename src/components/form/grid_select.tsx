@@ -33,7 +33,11 @@ export const GridSelect: FC<Prop> = ({ total = 1, values = [] }) => {
                         value={index}
                         id={key}
                         checked={!!check}
-                        disabled={!!check} />
+                        disabled={!!check}
+                        data-item-id={key}
+                        data-item-category={`numero de rifa`}
+                        data-item-name={`Numero ${index + 1}`}
+                    />
                     <label key={index} htmlFor={key}
 
                         className={classNames(`

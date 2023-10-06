@@ -13,7 +13,11 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
 <script>
     import { logEvent } from "firebase/analytics";
     import { analytics } from "../lib/firebase";
-    logEvent(analytics, "page_view");
+    logEvent(analytics, "page_view", {
+        page_title: "home",
+        page_location: location.href,
+        page_path: location.pathname,
+    });
 </script>
 
 <script>
@@ -219,7 +223,7 @@ import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.
             </div>
         </article>
     </main>
-    <footer class="m-auto container py-8">
+    <footer class="m-auto container py-8 text-gray-500">
         <p class="text-sm text-center">
             Sitio creado por Jonathan Delgado (<a
                 href="https://jon.soy"

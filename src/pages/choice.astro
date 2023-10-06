@@ -15,121 +15,224 @@ const data: any[] = docs.docs.map((snap) => snap.data());
 <script>
     import { logEvent } from "firebase/analytics";
     import { analytics } from "../lib/firebase";
-    logEvent(analytics, "page_view");
+    logEvent(analytics, "page_view", {
+        page_title: "choice",
+        page_location: location.href,
+        page_path: location.pathname,
+    });
 </script>
 
 <script>
+    import { logEvent, type Item } from "firebase/analytics";
+    import { analytics } from "../lib/firebase";
     const choiceForm = document.querySelector("#choice");
-    const btns = document.querySelectorAll("[x-wa-send]");
 
     if (choiceForm instanceof HTMLFormElement) {
-        for (const btn of btns) {
-            if (btn instanceof HTMLButtonElement) {
-                btn.addEventListener("click", () => {
-                    const textTemplate = btn.dataset.textTemplate;
-                    const phone = btn.dataset.phone;
-                    const baseHref = btn.dataset.baseHref;
-                    const formData = new FormData(choiceForm);
-                    const numbers = formData
-                        .getAll("raffle_number")
-                        .map((e) => Number(e.toString()) + 1);
-
-                    const u = new URL(baseHref);
-                    u.pathname = `/${phone}`;
-
-                    u.searchParams.set(
-                        "text",
-                        textTemplate.replace(
-                            "{numbers}",
-                            new Intl.ListFormat("es-cl").format(
-                                numbers.map((e) => e.toString()),
-                            ),
-                        ),
-                    );
-
-                    console.log({ u, phone, textTemplate, baseHref, numbers });
-
-                    window.open(u, "black");
-                });
+        choiceForm.addEventListener("change", (event) => {
+            const target = event.target;
+            if (target instanceof HTMLInputElement) {
+                if (target.checked) {
+                    logEvent(analytics, "add_to_cart", {
+                        currency: "CLP",
+                        value: 3000,
+                        items: [
+                            {
+                                price: 3000,
+                                item_id: target.dataset.itemId,
+                                item_name: target.dataset.itemName,
+                                item_category: target.dataset.itemCategory,
+                                quantity: 1,
+                            } as Item,
+                        ],
+                    });
+                } else {
+                    logEvent(analytics, "remove_from_cart", {
+                        currency: "CLP",
+                        value: 3000,
+                        items: [
+                            {
+                                price: 3000,
+                                item_id: target.dataset.itemId,
+                                item_name: target.dataset.itemName,
+                                item_category: target.dataset.itemCategory,
+                                quantity: 1,
+                            } as Item,
+                        ],
+                    });
+                }
             }
-        }
+        });
+    }
+
+    if (choiceForm instanceof HTMLFormElement) {
+        choiceForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (event.currentTarget instanceof HTMLFormElement) {
+                const formData = new FormData(event.currentTarget);
+
+                const typeSend =
+                    event.submitter instanceof HTMLButtonElement
+                        ? event.submitter.value
+                        : "mercadopago";
+
+                const textTemplate = formData.get("wa-send-text-template");
+                const phone = formData.get("wa-send-phone");
+                const baseHref = formData.get("wa-send-base-href");
+                const numbersInputs = formData.getAll("raffle_number");
+                const numbers = numbersInputs.map(
+                    (e) => Number(e.toString()) + 1,
+                );
+
+                console.log({
+                    textTemplate,
+                    phone,
+                    baseHref,
+                    numbersInputs,
+                    numbers,
+                });
+
+                const u = new URL(`${baseHref}`);
+                u.pathname = `/${phone}`;
+
+                u.searchParams.set(
+                    "text",
+                    `${textTemplate}`.replace(
+                        "{numbers}",
+                        new Intl.ListFormat("es-cl").format(
+                            numbers.map((e) => e.toString()),
+                        ),
+                    ),
+                );
+
+                // console.log({
+                //     u,
+                //     phone,
+                //     textTemplate,
+                //     baseHref,
+                //     numbers,
+                // });
+
+                console.log(analytics, "begin_checkout", {
+                    currency: "CLP",
+                    value: numbers.length * 3000,
+                    items: numbersInputs
+                        .map(
+                            (e): HTMLInputElement =>
+                                choiceForm.querySelector(
+                                    `[name="raffle_number"][value=${JSON.stringify(
+                                        `${e}`,
+                                    )}]`,
+                                ),
+                        )
+                        .map((target) => ({
+                            price: 3000,
+                            item_id: target.dataset.itemId,
+                            item_name: target.dataset.itemName,
+                            item_category: target.dataset.itemCategory,
+                            quantity: 1,
+                        })),
+                });
+
+                if (typeSend === "wa-send") {
+                    window.open(u, "black");
+                    return;
+                }
+
+                choiceForm.submit();
+            }
+        });
     }
 </script>
 
 <DocumentLayout title="Rifa a beneficio Chico">
-    <div class="container m-auto p-4">
-        <form id="choice" method="post" action="/pay" autocomplete="on">
-            <div class="flex justify-center py-4">
-                <Image
-                    class="rounded shadow-md"
-                    src={PhotoChico}
-                    alt="Photo Chico"
-                    width={150}
-                    height={150}
-                    transition:name="photo_chico"
+    <main>
+        <div class="container m-auto p-4">
+            <form id="choice" method="post" action="/pay" autocomplete="on">
+                <input
+                    type="hidden"
+                    name="wa-send-base-href"
+                    value="https://wa.me"
                 />
-            </div>
-            <h1 class="text-2xl font-bold pb-2">
-                ¡Bienvenido a la Rifa Solidaria en Apoyo a Chico! 🐾
-            </h1>
-            <p class="pb-2">
-                Cada número que elijas no solo te da la oportunidad de ganar un
-                emocionante premio, sino que también contribuye directamente a
-                brindarle amor y atención a Chico. Tu generosidad y apoyo son
-                invaluables para su bienestar.
-            </p>
-            <p class="pb-2">
-                Selecciona tu número de la suerte entre los disponibles y, con
-                un poco de suerte, podrías ser el afortunado ganador. ¡Gracias
-                por ser parte de esta noble causa!
-            </p>
-            <div
-                class="[&>div>input]:border
+                <input type="hidden" name="wa-send-phone" value="56963187228" />
+                <input
+                    type="hidden"
+                    name="wa-send-text-template"
+                    value="Hola, quiero comprar los numeros {numbers}"
+                />
+
+                <div class="flex justify-center py-4">
+                    <Image
+                        class="rounded shadow-md"
+                        src={PhotoChico}
+                        alt="Photo Chico"
+                        width={150}
+                        height={150}
+                        transition:name="photo_chico"
+                    />
+                </div>
+                <h1 class="text-2xl font-bold pb-2">
+                    ¡Bienvenido a la Rifa Solidaria en Apoyo a Chico! 🐾
+                </h1>
+                <p class="pb-2">
+                    Cada número que elijas no solo te da la oportunidad de ganar
+                    un emocionante premio, sino que también contribuye
+                    directamente a brindarle amor y atención a Chico. Tu
+                    generosidad y apoyo son invaluables para su bienestar.
+                </p>
+                <p class="pb-2">
+                    Selecciona tu número de la suerte entre los disponibles y,
+                    con un poco de suerte, podrías ser el afortunado ganador.
+                    ¡Gracias por ser parte de esta noble causa!
+                </p>
+                <div
+                    class="[&>div>input]:border
                        [&>div>input]:rounded
                        [&>div>input]:w-full
                        [&>div>input]:px-4
                        [&>div>input]:py-4
                        space-y-4"
-            >
-                <div>
-                    <GridSelect total={100} values={data} />
-                </div>
-                <div>
-                    <label for="phone_number">Numero de teléfono</label>
-                    <p class="text-gray-500">
-                        Por favor, proporciona tu número de teléfono a
-                        continuación. No te preocupes, solo lo usaremos para
-                        ponernos en contacto contigo si eres el afortunado
-                        ganador.
-                    </p>
-                    <Input
-                        id="phone_number"
-                        name="phone_number"
-                        type="tel"
-                        placeholder="123456789"
-                        autoComplete="tel-country-code"
-                        required
-                    />
-                </div>
-                <div class="flex gap-4">
-                    <button
-                        type="submit"
-                        class="px-4 py-2 rounded bg-blue-400 text-white inline-flex space-x-2 [&>span]:flex-1
-                        transition
-                        shadow
-                        hover:shadow-md
-                        focus:shadow-inner
-                        [&>svg]:flex-none
-                        [&>svg]:h-6
-                        "
-                    >
-                        <span>Ir a Pagar</span>
-                        <MercadoPagoLogoSvg />
-                    </button>
-                    <button
-                        type="button"
-                        x-wa-send
-                        class="px-4 py-2 inline-flex rounded bg-green-400 text-white
+                >
+                    <div>
+                        <GridSelect total={100} values={data} />
+                    </div>
+                    <div>
+                        <label for="phone_number">Numero de teléfono</label>
+                        <p class="text-gray-500">
+                            Por favor, proporciona tu número de teléfono a
+                            continuación. No te preocupes, solo lo usaremos para
+                            ponernos en contacto contigo si eres el afortunado
+                            ganador.
+                        </p>
+                        <Input
+                            id="phone_number"
+                            name="phone_number"
+                            type="tel"
+                            placeholder="123456789"
+                            autoComplete="tel-country-code"
+                            required
+                        />
+                    </div>
+                    <div class="flex gap-4">
+                        <button
+                            type="submit"
+                            name="type_send"
+                            value="mercadopago"
+                            class="px-4 py-2 rounded bg-blue-400 text-white inline-flex space-x-2 [&>span]:flex-1
+                                    transition
+                                    shadow
+                                    hover:shadow-md
+                                    focus:shadow-inner
+                                    [&>svg]:flex-none
+                                    [&>svg]:h-6"
+                        >
+                            <span>Ir a Pagar</span>
+                            <MercadoPagoLogoSvg />
+                        </button>
+                        <button
+                            type="submit"
+                            name="type_send"
+                            value="wa-send"
+                            class="px-4 py-2 inline-flex rounded bg-green-400 text-white
                                 space-x-2
                                 transition
                                 shadow
@@ -139,15 +242,24 @@ const data: any[] = docs.docs.map((snap) => snap.data());
                                 [&>svg]:flex-none
                                 [&>svg]:fill-white
                                 [&>svg]:h-6"
-                        data-base-href="https://wa.me"
-                        data-phone="56963187228"
-                        data-text-template="Hola, quiero comprar los numeros {numbers}"
-                    >
-                        <span>Ir a donar directo</span>
-                        <WhatsappSvgrepoComSvg />
-                    </button>
+                        >
+                            <span>Ir a donar directo</span>
+                            <WhatsappSvgrepoComSvg />
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    </main>
+    <footer class="m-auto container py-8 text-gray-500">
+        <p class="text-sm text-center">
+            Sitio creado por Jonathan Delgado (<a
+                href="https://jon.soy"
+                target="_blank">jon.soy</a
+            >)
+        </p>
+        <p class="text-sm text-center">
+            <a href="./about-site">Ver condiciones generales</a>
+        </p>
+    </footer>
 </DocumentLayout>

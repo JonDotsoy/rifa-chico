@@ -2,6 +2,16 @@
 import DocumentLayout from "../components/layouts/document-layout.astro";
 ---
 
+<script>
+    import { logEvent } from "firebase/analytics";
+    import { analytics } from "../lib/firebase";
+    logEvent(analytics, "page_view", {
+        page_title: "about-site",
+        page_location: location.href,
+        page_path: location.pathname,
+    });
+</script>
+
 <DocumentLayout title="Condiciones Generales del Sitio">
     <main>
         <article>
