@@ -81,7 +81,7 @@ const since = Number(Astro.url.searchParams.get("since") ?? 0);
     </form>
 
     <div class="w-[812px] m-auto block relative">
-        <div class="absolute right-0 w-[120px] text-center rotate-3 -translate-x-4 border rounded-md p-2">
+        <div class="absolute right-0 w-[120px] text-center rotate-3 -translate-x-4 translate-y-5 border rounded-md p-2">
             <Image src={QRcode} alt="QR al sitio" width={120} />
             <p class="text-sm">Visita el sitio de Chico para mas información</p>
         </div>
