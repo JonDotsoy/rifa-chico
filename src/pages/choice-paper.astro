@@ -1,0 +1,150 @@
+---
+import DocumentLayout from "../components/layouts/document-layout.astro";
+import { Input } from "../components/form/input";
+import { GridSelectPaper } from "../components/form/grid_select_paper";
+import PhotoChico from "../../public/photo_chico.jpeg";
+import PhotoChico2 from "../../public/photo_chico_2.jpeg";
+import { Image, getImage } from "astro:assets";
+import WhatsappSvgrepoComSvg from "../components/icons/whatsapp-svgrepo-com.svg.astro";
+
+import PremioCajaMercaderia from "../../public/premio-caja-mercaderia.jpg";
+import PremioHuaweiBand6Rosa from "../../public/premio-huawei-band-6-rosa.jpeg";
+import PremioStickerGigante from "../../public/premio-sticker-gigante.png";
+import PremioSabanasAzul from "../../public/premio-sabanas-azul.webp";
+import QRcode from "../../public/qrcode.png";
+
+// await getImage({src:})
+
+const since = Number(Astro.url.searchParams.get("since") ?? 0);
+---
+
+<script>
+    import { logEvent } from "firebase/analytics";
+    import { analytics } from "../lib/firebase";
+    logEvent(analytics, "page_view");
+</script>
+
+<script>
+    const choiceForm = document.querySelector("#choice");
+    const btns = document.querySelectorAll("[x-wa-send]");
+
+    if (choiceForm instanceof HTMLFormElement) {
+        for (const btn of btns) {
+            if (btn instanceof HTMLButtonElement) {
+                btn.addEventListener("click", () => {
+                    const textTemplate = btn.dataset.textTemplate;
+                    const phone = btn.dataset.phone;
+                    const baseHref = btn.dataset.baseHref;
+                    const formData = new FormData(choiceForm);
+                    const numbers = formData
+                        .getAll("raffle_number")
+                        .map((e) => Number(e.toString()) + 1);
+
+                    const u = new URL(baseHref);
+                    u.pathname = `/${phone}`;
+
+                    u.searchParams.set(
+                        "text",
+                        textTemplate.replace(
+                            "{numbers}",
+                            new Intl.ListFormat("es-cl").format(
+                                numbers.map((e) => e.toString()),
+                            ),
+                        ),
+                    );
+
+                    console.log({ u, phone, textTemplate, baseHref, numbers });
+
+                    window.open(u, "black");
+                });
+            }
+        }
+    }
+</script>
+
+<DocumentLayout title="Rifa a beneficio Chico">
+    <form class="max-w-md m-auto print:hidden p-4" method="get">
+        <div class="flex flex-col bg-gray-100 p-4 space-y-4 rounded shadow-md">
+            <label for="query_since">Numeración desde</label>
+            <input
+                id="query_since"
+                type="number"
+                name="since"
+                class="border p-4"
+                value={since}
+            />
+            <button
+                class="bg-blue-400 shadow-md hover:shadow transition focus:bg-blue-500 focus:shadow-inner rounded p-4 text-white"
+                >Configurar sitio</button
+            >
+        </div>
+    </form>
+
+    <div class="w-[812px] m-auto block relative">
+        <div class="absolute right-0 w-[120px] text-center rotate-3 -translate-x-4 border rounded-md p-2">
+            <Image src={QRcode} alt="QR al sitio" width={120} />
+            <p class="text-sm">Visita el sitio de Chico para mas información</p>
+        </div>
+        <div class="flex justify-center py-4 space-x-4">
+            <Image
+                src={PhotoChico2}
+                class="rounded"
+                alt="Chico en el parque"
+                width={170}
+                transition:name="photo_chico"
+            />
+            <Image
+                src={PhotoChico}
+                class="rounded"
+                alt="Chico en la playa"
+                width={170}
+            />
+        </div>
+        <h1 class="text-2xl font-bold pb-2">
+            ¡Bienvenido a la Rifa Solidaria en Apoyo a Chico! 🐾
+        </h1>
+        <p class="pb-2">
+            ¡No te pierdas nuestra emocionante rifa solidaria! Cada número tiene
+            un valor de <strong>13.000.-</strong> pesos, y al participar, no solo tienes la
+            oportunidad de ganar fabulosos premios, que incluyen <strong>3 cajas de
+            mercadería básica</strong> para abastecer tu hogar, un <strong>reloj Huawei Band 6
+            reacondicionado</strong> para mantenerte conectado y saludable, un <strong>juego de
+            sábanas de dos plazas</strong> para tu comodidad y un <strong>Logo con diseño
+            personalizado de alta durabilidad</strong>, ideal para tu espacio exterior.
+        </p>
+        <div class="flex flex-row justify-center gap-4 p-2 pb-4">
+            <Image
+                src={PremioHuaweiBand6Rosa}
+                alt="Premio Huawei Band 6 Rosa"
+                height={100}
+            />
+            <Image
+                src={PremioStickerGigante}
+                alt="Premio Sticker Personalizado"
+                height={100}
+            />
+            <Image
+                src={PremioSabanasAzul}
+                alt="Premio Sábanas Azul"
+                height={100}
+            />
+            <Image
+                src={PremioCajaMercaderia}
+                alt="Premio Caja de mercaderia"
+                height={100}
+            />
+        </div>
+        <div
+            class="[&>div>input]:border
+                       [&>div>input]:rounded
+                       [&>div>input]:w-full
+                       [&>div>input]:px-4
+                       [&>div>input]:py-4
+                       space-y-4"
+        >
+            <div>
+                <GridSelectPaper total={10} since={since} />
+            </div>
+        </div>
+    </div>
+</DocumentLayout>
