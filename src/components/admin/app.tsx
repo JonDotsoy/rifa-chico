@@ -1,7 +1,7 @@
 import { useEffect, type FC, useState, type FormEvent, type PropsWithChildren, useRef, Fragment, useId } from "react";
 import useSWR, { mutate } from "swr"
 import { app } from "../../lib/firebase"
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut, updateCurrentUser, type User } from "firebase/auth"
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, updateCurrentUser, type User } from "firebase/auth"
 import { collection, getDocs, getFirestore, setDoc, doc, updateDoc } from "firebase/firestore"
 import classNames from "classnames";
 import styles from "./app.module.css";
@@ -181,7 +181,7 @@ export const App: FC = () => {
     } = useSWR(user && 'listRaffles', listRaffles)
 
     const signIn = () => {
-        signInWithRedirect(auth, new GoogleAuthProvider())
+        signInWithPopup(auth, new GoogleAuthProvider())
     }
 
     const onSignOut = () => {
